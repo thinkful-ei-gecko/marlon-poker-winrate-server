@@ -1,0 +1,3 @@
+TRUNCATE
+  poker_sessions
+  RESTART IDENTITY CASCADE;
