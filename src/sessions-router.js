@@ -29,7 +29,7 @@ sessionsRouter
       res
         .status(201)
         .json({
-          id: session.session_id,
+          id: session.id,
           game_type_one: session.game_type_one,
           game_type_two: session.game_type_two,
           date_played: session.date_played,
@@ -50,7 +50,7 @@ sessionsRouter
   .all(checkSessionExists)
   .get((req, res) => {
     res.json({
-      id: res.session.session_id,
+      id: res.session.id,
       game_type_one: res.session.game_type_one,
       game_type_two: res.session.game_type_two,
       date_played: res.session.date_played,
@@ -86,7 +86,7 @@ sessionsRouter
       )
       .then(session => {
         res.status(200).json({
-          id: session.session_id,
+          id: session.id,
           game_type_one: session.game_type_one,
           game_type_two: session.game_type_two,
           date_played: session.date_played,
