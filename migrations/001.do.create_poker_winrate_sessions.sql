@@ -6,6 +6,7 @@ CREATE TABLE poker_sessions (
   game_type_one game_type_one NOT NULL,
   game_type_two game_type_two NOT NULL,
   date_played TIMESTAMP DEFAULT now() NOT NULL,
+  small_blind INTEGER NOT NULL,
   big_blind INTEGER NOT NULL,
   buy_in INTEGER NOT NULL,
   cashed_out INTEGER NOT NULL,

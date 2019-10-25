@@ -21,7 +21,9 @@ const SessionsService = {
   updateSession(knex, id, newSessionValues){
     return knex('poker_sessions')
       .where({ id })
-      .update(newSessionValues);
+      .update(newSessionValues)
+      .returning('*')
+      .then(rows => rows[0]);
   },
   addSession(knex, newSession){
     return knex
@@ -33,3 +35,4 @@ const SessionsService = {
 };
 
 module.exports = SessionsService;
+
