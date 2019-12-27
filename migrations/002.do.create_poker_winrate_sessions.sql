@@ -11,5 +11,7 @@ CREATE TABLE poker_sessions (
   buy_in NUMERIC NOT NULL,
   cashed_out NUMERIC NOT NULL,
   session_length NUMERIC NOT NULL,
-  notes TEXT
+  notes TEXT,
+  user_id INTEGER REFERENCES "user"(id)
+    ON DELETE CASCADE NOT NULL
 );

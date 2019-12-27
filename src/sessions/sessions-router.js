@@ -5,12 +5,16 @@ const SessionsService = require('./sessions-service');
 const sessionsRouter = express.Router();
 const xss = require('xss');
 const jsonParser = express.json();
+const { requireAuth } = require('../middleware/jwt-auth');
 
-sessionsRouter
+
+sessionsRouter.use(requireAuth)
   .route('/')
   .get((req, res, next) => {
+    console.log(req.user.id)
     SessionsService.getAllSessions(
-      req.app.get('db')
+      req.app.get('db'),
+      req.user.id
     )
       .then(sessions => {
         res.json(sessions);
@@ -18,8 +22,8 @@ sessionsRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const {game_type_one, game_type_two, small_blind, big_blind, buy_in, cashed_out, session_length, notes} = req.body;
-    const newSession = {game_type_one, game_type_two, small_blind, big_blind, buy_in, cashed_out, session_length, notes};
+    const {game_type_one, game_type_two, small_blind, big_blind, buy_in, cashed_out, session_length, notes, user_id} = req.body;
+    const newSession = {game_type_one, game_type_two, small_blind, big_blind, buy_in, cashed_out, session_length, notes, user_id};
 
     SessionsService.addSession(
       req.app.get('db'),

@@ -5,7 +5,9 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
-const sessionsRouter = require('./sessions-router');
+const sessionsRouter = require('./sessions/sessions-router');
+const authRouter = require('./auth/auth-router');
+const userRouter = require('./user/user-router');
 const { NODE_ENV } = require('./config');
 
 const app = express();
@@ -19,7 +21,8 @@ app.use(helmet());
 app.use(cors());
 
 app.use('/api/sessions', sessionsRouter);
-
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;

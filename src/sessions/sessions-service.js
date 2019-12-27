@@ -3,8 +3,10 @@
 const knex = require('knex');
 
 const SessionsService = {
-  getAllSessions(knex) {
-    return knex.select('*').from('poker_sessions');
+  getAllSessions(knex, user_id) {
+    return knex('poker_sessions')
+      .where('user_id', user_id)
+    ;
   },
   getById(knex, id) {
     return knex
