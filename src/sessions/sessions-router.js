@@ -11,7 +11,6 @@ const { requireAuth } = require('../middleware/jwt-auth');
 sessionsRouter.use(requireAuth)
   .route('/')
   .get((req, res, next) => {
-    console.log(req.user.id)
     SessionsService.getAllSessions(
       req.app.get('db'),
       req.user.id

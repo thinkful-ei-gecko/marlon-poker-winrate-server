@@ -7,6 +7,9 @@ const helpers = require('./test-helpers');
 describe.only('Sessions endpoints', () => {
   let db;
 
+  const testUsers = helpers.makeTestUsers();
+  const testUser = testUsers[0];
+
   before('Create knex instance', () => {
     db = knex({
       client: 'pg',
@@ -22,10 +25,18 @@ describe.only('Sessions endpoints', () => {
   afterEach('Cleanup', () => helpers.cleanTables(db));
 
   describe('GET /api/sessions', () => {
+    beforeEach('insert users', () => {
+      helpers.seedUsers(
+        db,
+        testUsers
+      )
+    })
+
     context('Given no sessions', () => {
       it('Reponds with 200 and empty list', () => {
         return supertest(app)
           .get('/api/sessions')
+          .set('Authorization', helpers.makeAuthHeader(testUser))
           .expect(200, []);
       });
     });
@@ -34,7 +45,7 @@ describe.only('Sessions endpoints', () => {
       beforeEach('insert sessions', () => 
         helpers.seedSessions(
           db,
-          helpers.makeSessionsArray()
+          helpers.makeSessionsArray(testUser)
         )
       );
       it('responds with 200 and all of the sessions in the db', () => {

@@ -1,6 +1,11 @@
 'use strict';
 
-function makeSessionsArray() {
+const knex = require('knex');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+
+function makeSessionsArray(user) {
   return [
     {
       id: 1,
@@ -12,7 +17,8 @@ function makeSessionsArray() {
       buy_in: 200,
       cashed_out: 250,
       session_length: 4,
-      notes: 'Notes 1'
+      notes: 'Notes 1',
+      user_id: user.id,
     },
     {
       id: 2,
@@ -24,7 +30,8 @@ function makeSessionsArray() {
       buy_in: 200,
       cashed_out: 300,
       session_length: 2,
-      notes: 'Notes 1'
+      notes: 'Notes 1',
+      user_id: user.id,
     },
     {
       id: 3,
@@ -36,7 +43,8 @@ function makeSessionsArray() {
       buy_in: 200,
       cashed_out: 150,
       session_length: 3,
-      notes: 'Notes 1'
+      notes: 'Notes 1',
+      user_id: user.id,
     },
   ];
 }
@@ -44,8 +52,8 @@ function makeSessionsArray() {
 function cleanTables(db) {
   return db.raw(
     `TRUNCATE
-      poker_sessions
-      RESTART IDENTITY CASCADE`
+      "poker_sessions",
+      "user"`
   );
 }
 
@@ -55,8 +63,50 @@ function seedSessions(db, sessions) {
     .into('poker_sessions');
 }
 
+function seedUsers(db, users) {
+  const preppedUsers = users.map(user => ({
+    ...user,
+    password: bcrypt.hashSync(user.password, 1)
+  }));
+  return db.transaction(async trx => {
+    await trx.into('user').insert(preppedUsers);
+  });
+}
+
+function makeTestUsers() {
+  return [
+    {
+      username: 'tester',
+      email: 'test@test.com',
+      password: 'password'
+    },
+    {
+      username: 'tester2',
+      email: 'test2@test.com',
+      password: 'password'
+    },
+    {
+      username: 'tester3',
+      email: 'test3@test.com',
+      password: 'password'
+    },
+  ];
+}
+
+function makeAuthHeader(user, secret = process.env.JWT_SECRET) {
+  const token = jwt.sign({ user_id: user.id }, secret, {
+    subject: user.username,
+    algorithm: 'HS256',
+  });
+  return `Bearer ${token}`;
+}
+
+
 module.exports = {
   makeSessionsArray,
   cleanTables,
   seedSessions,
+  makeTestUsers,
+  makeAuthHeader,
+  seedUsers,
 };

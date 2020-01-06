@@ -1,6 +1,6 @@
 'use strict';
 
-const SessionsService = require('../src/sessions-service');
+const SessionsService = require('../src/sessions/sessions-service');
 const knex = require('knex');
 
 describe('Sessions service object', () => {
